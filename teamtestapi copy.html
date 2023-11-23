@@ -48,7 +48,7 @@
                 .then(res => res.json())
                 .then(data => apidata = data.response.body.items)
                 .catch((err) => console.log(err));
-            recommendation(apidata.item[26].fcstValue, apidata.item[15].fcstValue);
+            recommendation(apidata.item[26].fcstValue, apidata.item[15].fcstValue); // 이지훈: 시간대는 임의로 넣었음. 추후에 보안
             console.log(result);
         };
 
@@ -73,7 +73,7 @@
                     $img.src = "https://image.msscdn.net/images/codimap/detail/1/detail_1_1_500.jpg?202311230011";
                     result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 }
-            } else if (gender == '여자') { // 성별이 여자인 경우
+            } else if (gender == '여자') { // 성별이 여자인 경우, 이지훈: else에서 else if로 변경
                 if (temperature <= 2) { // 기온이 2도 이하인 경우
                     $img.src = "https://image.msscdn.net/images/codimap/detail/28065/detail_28065_1_500.jpg?202311230011";
                     result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
@@ -91,12 +91,12 @@
                     $img.src = "https://image.msscdn.net/images/codimap/detail/58/detail_58_1_500.jpg?202311230011";
                     result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 }
-            } else {
+            } else {//이지훈: 잘못된 성별일시 실헹 되는 코드
                 alert("올바르지 않은 성별");
             }
 
             // if (rainfall > 30) { // 강수확률 30 이상인 경우
-            //     result = "멘트";
+            //     result = "멘트";  이지훈: 아직까지 비가 안내려서 이코드 활용 못했어요.
             // }
             return result;
         };
