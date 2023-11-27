@@ -31,6 +31,11 @@
         let realday = String(year) + String(Month) + String(day);
         let result = "";
 
+        let rain;  //이지훈: 강수관련된 변수들
+        let slice = /[^0-9]/g; //문자열중 숫자만 남기는거
+        let rainwaring;
+
+
         const onGenderInput = (event) => {
             gender = event.target.value; // input태그에 입력한 값 gender에 저장
         };
@@ -49,7 +54,13 @@
                 .then(data => apidata = data.response.body.items)
                 .catch((err) => console.log(err));
             recommendation(apidata.item[26].fcstValue, apidata.item[15].fcstValue); // 이지훈: 시간대는 임의로 넣었음. 추후에 보안
-            console.log(result);
+            
+            rain = '1.0mm';
+            // rain=apidata.item[12].fcstValue; 이지훈: 추후 시간대와 같이 보완 1mm는 예시임
+            let realrain = rain.replace(slice, '') / 10;
+            recommendation(apidata.item[26].fcstValue, realrain);
+            console.log(result, rainwaring);
+        
         };
 
 
@@ -95,10 +106,10 @@
                 alert("올바르지 않은 성별");
             }
 
-            // if (rainfall > 30) { // 강수확률 30 이상인 경우
-            //     result = "멘트";  이지훈: 아직까지 비가 안내려서 이코드 활용 못했어요.
-            // }
-            return result;
+            if (rainfall >= 1) {
+                rainwaring = "비내림 멘트";
+            }
+            return result, rainwaring; //이지훈: 강수 reslut를 rainwaring으로 변경
         };
 
 
