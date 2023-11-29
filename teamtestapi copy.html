@@ -21,31 +21,23 @@
         $button = document.querySelector("button");
         const apiKey = "exc8sJCH86r%2BCD8Xp4xzR7KVKJEXsS83J3GVgs3aWLgCMD2iDoBjpuUxV9nIfRTKQdHswD2tolt9eJkteZn%2FCg%3D%3D";
 
-        let gender;
+        let gender; //사용자 정보
         let area;
-        let today = new Date();
+
+        let today = new Date(); //날짜및 시간 관련 변수들
         let hour = today.getHours() - 1;// 시간
         let year = today.getFullYear(); //년도
         let Month = today.getMonth() + 1;//월
         let day = today.getDate();//날짜
         let realday = String(year) + String(Month) + String(day);
-        let result = "";
 
-        let rain;  //이지훈: 강수관련된 변수들
-        let slice = /[^0-9]/g; //문자열중 숫자만 남기는거
-        let rainwaring;
+        let result = ""; // 멘트 관련 변수들
+        let rainwaring = '현재 우산이 필요없다.';
+
+        let AverageTem = [0, 0]; // 평균온도 관련된 변수 0:온도합, 1:평균온도
+        let AverageRa = ["", 0, 0]; // 평균 강수량에 관련된 변수 0:해당시간 강수량, 1:강수의합, 2: 평균 강수
 
 
-        const onGenderInput = (event) => {
-            gender = event.target.value; // input태그에 입력한 값 gender에 저장
-        };
-
-        const onAreaInput = (event) => {
-            area = event.target.value;
-        };
-
-        $genderinput.addEventListener('input', onGenderInput); // input이벤트 발생하면 onGenderInput함수 실행
-        $areainput.addEventListener('input', onAreaInput);
 
 
         const onClickbutton = async () => {
@@ -53,14 +45,10 @@
                 .then(res => res.json())
                 .then(data => apidata = data.response.body.items)
                 .catch((err) => console.log(err));
-            recommendation(apidata.item[26].fcstValue, apidata.item[15].fcstValue); // 이지훈: 시간대는 임의로 넣었음. 추후에 보안
-            
-            rain = '1.0mm';
-            // rain=apidata.item[12].fcstValue; 이지훈: 추후 시간대와 같이 보완 1mm는 예시임
-            let realrain = rain.replace(slice, '') / 10;
-            recommendation(apidata.item[26].fcstValue, realrain);
-            console.log(result, rainwaring);
-        
+            AverageTemperature(); // 평균온도 구하는 함수
+            AverageRain(); // 평균 강수량 구하는 함수
+            recommendation(AverageTem[1], AverageRa[2]); // 패션 추천 함수
+            console.log(result, rainwaring, `평균온도: ${AverageTem[1]}`, `평균강수량: ${AverageRa[2]}`);
         };
 
 
@@ -69,22 +57,22 @@
             if (gender == '남자') { // 성별이 남자인 경우
                 if (temperature <= 2) { // 기온이 2도 이하인 경우
                     $img.src = "https://image.msscdn.net/images/codimap/detail/28096/detail_28096_1_500.jpg?202311230011";
-                    result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
+                    result = "너무 추움멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 } else if (temperature > 2 && temperature <= 9) { // 기온 2도 ~ 9도
                     $img.src = "https://image.msscdn.net/images/codimap/detail/28055/detail_28055_1_500.jpg?202311230011";
-                    result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
+                    result = "좀 덜추움멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 } else if (temperature > 9 && temperature <= 16) { // 기온 9도 ~ 16도
                     $img.src = "https://image.msscdn.net/images/codimap/detail/448/detail_448_1_500.jpg?202311230011";
-                    result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
+                    result = " 괜찮음 멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 } else if (temperature > 16 && temperature <= 23) { // 기온 16도 ~ 23도
                     $img.src = "https://image.msscdn.net/images/codimap/detail/191/detail_191_1_500.jpg?202311230011";
-                    result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
+                    result = "더움 멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 }
                 else { // 기온이 23도 초과인 경우
                     $img.src = "https://image.msscdn.net/images/codimap/detail/1/detail_1_1_500.jpg?202311230011";
-                    result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
+                    result = "개더움 멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 }
-            } else if (gender == '여자') { // 성별이 여자인 경우, 이지훈: else에서 else if로 변경
+            } else if (gender == '여자') { // 성별이 여자인 경우 , 이지훈: else에서 else if로 변경
                 if (temperature <= 2) { // 기온이 2도 이하인 경우
                     $img.src = "https://image.msscdn.net/images/codimap/detail/28065/detail_28065_1_500.jpg?202311230011";
                     result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
@@ -102,8 +90,8 @@
                     $img.src = "https://image.msscdn.net/images/codimap/detail/58/detail_58_1_500.jpg?202311230011";
                     result = "멘트" + " 링크 : <a href='https://example.com'>here</a>";
                 }
-            } else {//이지훈: 잘못된 성별일시 실헹 되는 코드
-                alert("올바르지 않은 성별");
+            } else {
+                alert("올바르지 않은 성별"); // //이지훈: 잘못된 성별일시 실헹 되는 코드 , 버튼으로 바뀔시 삭제요망
             }
 
             if (rainfall >= 1) {
@@ -112,9 +100,40 @@
             return result, rainwaring; //이지훈: 강수 reslut를 rainwaring으로 변경
         };
 
+        const AverageTemperature = () => {
+            for (i = 24; i < 30; i++) {
+                AverageTem[0] += Number(apidata.item[i].fcstValue);
+            }
+            AverageTem[1] = Math.floor(AverageTem[0] / 6)
+            return AverageTem[1];
+        }
 
+
+        const AverageRain = () => {
+            let slice = /[^0-9]/g; //문자열중 숫자만 남기는거
+
+            for (i = 12; i < 18; i++) {
+                AverageRa[0] = apidata.item[i].fcstValue;
+                AverageRa[1] += (AverageRa[0].replace(slice, "") / 10);
+                AverageRa[2] = Math.floor(AverageRa[1] / 6)
+            }
+            return AverageRa[2];
+        }
+
+        const onGenderInput = (event) => {
+            gender = event.target.value; // input태그에 입력한 값 gender에 저장
+        };
+
+        const onAreaInput = (event) => {
+            area = event.target.value;
+        };
+
+        $genderinput.addEventListener('input', onGenderInput); // input이벤트 발생하면 onGenderInput함수 실행
+        $areainput.addEventListener('input', onAreaInput);
         $button.addEventListener('click', onClickbutton);
     </script>
 </body>
+
+</html>
 
 </html>
