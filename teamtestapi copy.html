@@ -55,7 +55,7 @@
         });
 
         const onClickbutton = async () => {
-            await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${apiKey}&numOfRows=30&pageNo=1&dataType=json&base_date=${realday}&base_time=${hour}30&nx=63&ny=124`)
+            await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${apiKey}&numOfRows=30&pageNo=1&dataType=json&base_date=$20231203&base_time=${hour}30&nx=63&ny=124`)
                 .then(res => res.json())
                 .then(data => apidata = data.response.body.items)
                 .catch((err) => console.log(err));
