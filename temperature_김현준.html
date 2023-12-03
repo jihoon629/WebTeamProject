@@ -1,0 +1,57 @@
+const newRecommendation = async () => {
+    // 새로운 추천 얻기
+    await newRebutton();
+
+    
+    $img.src = ''; // 이미지 초기화
+    result = ''; // 결과 초기화
+    
+    if (gender == '남자') { // 성별이 남자인 경우
+                if (temperature <= 2) { // 기온이 2도 이하인 경우
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/28096/detail_28096_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                } else if (temperature > 2 && temperature <= 9) { // 기온 2도 ~ 9도
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/28055/detail_28055_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                } else if (temperature > 9 && temperature <= 16) { // 기온 9도 ~ 16도
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/448/detail_448_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                } else if (temperature > 16 && temperature <= 23) { // 기온 16도 ~ 23도
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/191/detail_191_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                }
+                else { // 기온이 23도 초과인 경우
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/1/detail_1_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                }
+            } else if (gender == '여자') { // 성별이 여자인 경우, 이지훈: else에서 else if로 변경
+                if (temperature <= 2) { // 기온이 2도 이하인 경우
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/28065/detail_28065_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                } else if (temperature > 2 && temperature <= 9) { // 기온 2도 ~ 9도
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/27750/detail_27750_2_500.jpg?202311222311";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                } else if (temperature > 9 && temperature <= 16) { // 기온 9도 ~ 16도
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/303/detail_303_1_500.jpg?202311230111";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                } else if (temperature > 16 && temperature <= 23) { // 기온 16도 ~ 23도
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/265/detail_265_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                }
+                else { // 기온이 23도 초과인 경우
+                    $img.src = "https://image.msscdn.net/images/codimap/detail/58/detail_58_1_500.jpg?202311230011";
+                    result = "멘트" + " 링크 : <a href='https://www.naver.com' target='_blank'>https://www.naver.com</a>";
+                }
+            }
+
+    // 화면에 업데이트된 이미지와 멘트 표시
+    return result;
+};
+              
+                  
+const $newRebutton = document.querySelector('#newRebutton');
+
+$newRebutton.addEventListener('click', newRecommendation);
+
+    const resultArea = document.querySelector('#resultArea');
+    resultArea.innerHTML = result;
