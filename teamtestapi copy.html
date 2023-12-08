@@ -14,10 +14,31 @@
     <button id="female">여자</button>
     <div>성별: <span id="gender"></span></div>
     <br>
-    <div>지역을 입력하세요. (예시 : 서울, 부산)</div>
-    <input type="text" id="areainput">
+    <!--지역을 버튼으로 선택-->
+    <div>지역을 선택하세요.</div>
+    <button id="area1">강원특별자치도</button>
+    <button id="area2">경기도</button>
+    <button id="area3">경상남도</button>
+    <button id="area4">경상북도</button>
+    <button id="area5">광주광역시</button>
+    <button id="area6">대구광역시</button>
+    <button id="area7">대전광역시</button>
+    <button id="area8">부산광역시</button>
+    <button id="area9">서울특별시</button>
+    <button id="area10">세종특별자치시</button>
+    <button id="area11">울산광역시</button>
+    <button id="area12">이어도</button>
+    <button id="area13">인천광역시</button>
+    <button id="area14">전라남도</button>
+    <button id="area15">전라북도</button>
+    <button id="area16">제주특별자치도</button>
+    <button id="area17">충청남도</button>
+    <button id="area18">충청북도</button>
+    <div>지역: <span id="area"></span></div>
+    <br>
+    <div>제출 버튼을 클릭하세요.</div>
     <button id="rec">제출</button>
-    <div><img width="400px" src="" alt=""></div>
+    <div><br><img width="400px" src="" alt=""></div>
     <div id="resultArea"></div>
 
     <button id="anotherRecommendation">다른 추천 받기</button>
@@ -25,7 +46,7 @@
 
     <script>
         const $gender = document.querySelector('#gender'); // id가 gender인 태그 선택하여 $gender에 저장
-        const $areainput = document.querySelector('#areainput');
+        const $area = document.querySelector('#area');
         const $img = document.querySelector('img');
         $button = document.querySelector("#rec");
         $malebut = document.querySelector('#male')
@@ -48,6 +69,9 @@
         let realday = String(year) + String(Month) + String(day);
         let apidata;
 
+        let nx; // 지역 격자X
+        let ny; // 지역 격자Y
+
         let result = ""; // 멘트 관련 변수들
         let rainWarning = '현재 우산이 필요없다.';
 
@@ -56,14 +80,13 @@
 
 
 
-
+        // 성별 버튼 클릭
         document.querySelector('#male').addEventListener('click', () => {
             $gender.textContent = '남자'; // 화면에 성별 표시
             gender = '남자';
             console.log(gender);
             return gender;
         });
-
         document.querySelector('#female').addEventListener('click', () => {
             $gender.textContent = '여자';
             gender = '여자';
@@ -72,8 +95,102 @@
         });
 
 
+
+        // 지역 버튼 클릭
+        document.querySelector('#area1').addEventListener('click', () => {
+            nx = 73;
+            ny = 134;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area2').addEventListener('click', () => {
+            nx = 60;
+            ny = 120;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area3').addEventListener('click', () => {
+            nx = 91;
+            ny = 77;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area4').addEventListener('click', () => {
+            nx = 89;
+            ny = 91;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area5').addEventListener('click', () => {
+            nx = 58;
+            ny = 74;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area6').addEventListener('click', () => {
+            nx = 89;
+            ny = 90;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area7').addEventListener('click', () => {
+            nx = 67;
+            ny = 100;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area8').addEventListener('click', () => {
+            nx = 98;
+            ny = 76;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area9').addEventListener('click', () => {
+            nx = 60;
+            ny = 127;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area10').addEventListener('click', () => {
+            nx = 66;
+            ny = 103;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area11').addEventListener('click', () => {
+            nx = 102;
+            ny = 84;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area12').addEventListener('click', () => {
+            nx = 28;
+            ny = 8;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area13').addEventListener('click', () => {
+            nx = 55;
+            ny = 124;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area14').addEventListener('click', () => {
+            nx = 51;
+            ny = 67;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area15').addEventListener('click', () => {
+            nx = 63;
+            ny = 89;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area16').addEventListener('click', () => {
+            nx = 52;
+            ny = 38;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area17').addEventListener('click', () => {
+            nx = 68;
+            ny = 100;
+            $area.textContent = event.target.textContent;
+        });
+        document.querySelector('#area18').addEventListener('click', () => {
+            nx = 69;
+            ny = 107;
+            $area.textContent = event.target.textContent;
+        });
+
+
         const onClickbutton = async () => {
-            await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${apiKey}&numOfRows=30&pageNo=1&dataType=json&base_date=${realday}&base_time=${hour}30&nx=68&ny=127`)
+            await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${apiKey}&numOfRows=30&pageNo=1&dataType=json&base_date=${realday}&base_time=${hour}30&nx=${nx}&ny=${ny}`)
                 .then(res => res.json())
                 .then(data => apidata = data.response.body.items)
                 .catch((err) => console.log(err));
@@ -86,6 +203,7 @@
                 <p>${rainWarning}</p>
             `;
             console.log(result, rainWarning, `평균온도: ${AverageTem[1]}`, `평균강수량: ${AverageRa[2]}`);
+            console.log(nx, ny);
         };
 
 
@@ -229,16 +347,12 @@
         }
 
 
-        const onAreaInput = (event) => {
-            area = event.target.value; // input태그에 입력한 값 area에 저장
-        };
-
-        $areainput.addEventListener('input', onAreaInput); // input이벤트 발생하면 onAreaInput함수 실행
         $button.addEventListener('click', onClickbutton);
 
         // 이지훈: 11/29일 추가내용 평균 온도 강수량 함수추가, 변수 설명, 코드 가독성을 위해 완성이된 함수들은 아래로 옮김 제대로 작동되는지 확인하려고 온도별 멘트 변경, 추후 지역자료는 업데이트 예정.
         // 경민서(12/3): 성별 입력 부분을 버튼으로 바꿈, 성별 버튼 클릭 이벤트 함수 추가, 잘못된 성별이면 실행되는 코드 삭제
         // 김현준 : 12월 4일 추가 내용 : 다른 추천 받기 버튼 및 함수 추가, 결과 화면 출력 및 링크 하이퍼링크로 변환 출력
+        // 경민서(12/8): 지역 입력 부분을 버튼으로 바꿈, 지역 버튼 클릭 이벤트 함수 추가
     </script>
 </body>
 
