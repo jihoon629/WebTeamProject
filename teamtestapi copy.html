@@ -312,10 +312,11 @@
                     $img.src = "https://image.msscdn.net/images/codimap/detail/25339/detail_25339_1_500.jpg?202312101212";
                     newResult = "오늘 기온은 "+ temperature +"도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25339?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
+                result= newResult;
             }
-            return {
-                result: newResult
-            }
+            return result;
+               
+            
 
             // 링크를 하이퍼링크로 생성 및 출력
             document.getElementById('resultArea').innerHTML = ` 
