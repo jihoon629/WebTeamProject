@@ -56,10 +56,9 @@
         const $anotherRecommendationButton = document.querySelector('#anotherRecommendation');
         const $anotherRecommendationArea = document.querySelector('#anotherRecommendationArea');
 
-
-
-        let gender; //사용자 정보
-        let area;
+        let gender; // 성별
+        let nx; // 지역 격자X
+        let ny; // 지역 격자Y
 
         let today = new Date(); //날짜및 시간 관련 변수들
         let hour = today.getHours() - 1;// 시간
@@ -68,9 +67,6 @@
         let day = ('0' + today.getDate()).slice(-2);//날짜
         let realday = String(year) + String(Month) + String(day);
         let apidata;
-
-        let nx; // 지역 격자X
-        let ny; // 지역 격자Y
 
         let result = ""; // 멘트 관련 변수들
         let rainWarning = '오늘은 강수확률이 낮아 우산이 필요 없습니다.';
@@ -81,112 +77,42 @@
 
 
         // 성별 버튼 클릭
-        document.querySelector('#male').addEventListener('click', () => {
-            $gender.textContent = '남자'; // 화면에 성별 표시
-            gender = '남자';
+        const onClickGender = (event) => {
+            $gender.textContent = event.target.textContent; // 화면에 성별 표시
+            gender = event.target.textContent; // 성별 변수에 성별 저장
             console.log(gender);
             return gender;
-        });
-        document.querySelector('#female').addEventListener('click', () => {
-            $gender.textContent = '여자';
-            gender = '여자';
-            console.log(gender);
-            return gender;
-        });
+        };
+        document.querySelector('#male').addEventListener('click', onClickGender);
+        document.querySelector('#female').addEventListener('click', onClickGender);
 
 
 
         // 지역 버튼 클릭
-        document.querySelector('#area1').addEventListener('click', () => {
-            nx = 73;
-            ny = 134;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area2').addEventListener('click', () => {
-            nx = 60;
-            ny = 120;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area3').addEventListener('click', () => {
-            nx = 91;
-            ny = 77;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area4').addEventListener('click', () => {
-            nx = 89;
-            ny = 91;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area5').addEventListener('click', () => {
-            nx = 58;
-            ny = 74;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area6').addEventListener('click', () => {
-            nx = 89;
-            ny = 90;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area7').addEventListener('click', () => {
-            nx = 67;
-            ny = 100;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area8').addEventListener('click', () => {
-            nx = 98;
-            ny = 76;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area9').addEventListener('click', () => {
-            nx = 60;
-            ny = 127;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area10').addEventListener('click', () => {
-            nx = 66;
-            ny = 103;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area11').addEventListener('click', () => {
-            nx = 102;
-            ny = 84;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area12').addEventListener('click', () => {
-            nx = 28;
-            ny = 8;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area13').addEventListener('click', () => {
-            nx = 55;
-            ny = 124;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area14').addEventListener('click', () => {
-            nx = 51;
-            ny = 67;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area15').addEventListener('click', () => {
-            nx = 63;
-            ny = 89;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area16').addEventListener('click', () => {
-            nx = 52;
-            ny = 38;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area17').addEventListener('click', () => {
-            nx = 68;
-            ny = 100;
-            $area.textContent = event.target.textContent;
-        });
-        document.querySelector('#area18').addEventListener('click', () => {
-            nx = 69;
-            ny = 107;
-            $area.textContent = event.target.textContent;
-        });
+        const onClickArea = (x, y) => () => {
+            $area.textContent = event.target.textContent; // 화면에 성별 표시
+            nx = x; // 지역 격자X 변수에 x좌표 저장
+            ny = y;
+            console.log(nx, ny);
+        };
+        document.querySelector('#area1').addEventListener('click', onClickArea(73, 134));
+        document.querySelector('#area2').addEventListener('click', onClickArea(60, 120));
+        document.querySelector('#area3').addEventListener('click', onClickArea(91, 77));
+        document.querySelector('#area4').addEventListener('click', onClickArea(89, 91));
+        document.querySelector('#area5').addEventListener('click', onClickArea(58, 74));
+        document.querySelector('#area6').addEventListener('click', onClickArea(89, 90));
+        document.querySelector('#area7').addEventListener('click', onClickArea(67, 100));
+        document.querySelector('#area8').addEventListener('click', onClickArea(98, 76));
+        document.querySelector('#area9').addEventListener('click', onClickArea(60, 127));
+        document.querySelector('#area10').addEventListener('click', onClickArea(66, 103));
+        document.querySelector('#area11').addEventListener('click', onClickArea(102, 84));
+        document.querySelector('#area12').addEventListener('click', onClickArea(28, 8));
+        document.querySelector('#area13').addEventListener('click', onClickArea(55, 124));
+        document.querySelector('#area14').addEventListener('click', onClickArea(51, 67));
+        document.querySelector('#area15').addEventListener('click', onClickArea(63, 89));
+        document.querySelector('#area16').addEventListener('click', onClickArea(52, 38));
+        document.querySelector('#area17').addEventListener('click', onClickArea(68, 100));
+        document.querySelector('#area18').addEventListener('click', onClickArea(69, 107));
 
 
         const onClickbutton = async () => {
@@ -203,7 +129,6 @@
                 <p>${rainWarning}</p>
             `;
             console.log(result, rainWarning, `평균온도: ${AverageTem[1]}`, `평균강수량: ${AverageRa[2]}`);
-            console.log(nx, ny);
         };
 
 
@@ -354,6 +279,7 @@
         // 김현준 : 12월 4일 추가 내용 : 다른 추천 받기 버튼 및 함수 추가, 결과 화면 출력 및 링크 하이퍼링크로 변환 출력
         // 경민서(12/8): 지역 입력 부분을 버튼으로 바꿈, 지역 버튼 클릭 이벤트 함수 추가
         // 김현준 : 옷차림 추천 및 다른 추천 컨텐츠 추가
+        // 경민서(12/11): 성별 버튼 클릭과 지역 버튼 클릭 부분을 함수를 이용하여 중복 제거
     </script>
 </body>
 
