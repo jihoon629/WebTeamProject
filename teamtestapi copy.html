@@ -8,13 +8,11 @@
 </head>
 
 <body>
-    <!--성별을 버튼으로 선택-->
     <div>성별을 선택하세요.</div>
     <button id="male">남자</button>
     <button id="female">여자</button>
     <div>성별: <span id="gender"></span></div>
     <br>
-    <!--지역을 버튼으로 선택-->
     <div>지역을 선택하세요.</div>
     <button id="area1">강원특별자치도</button>
     <button id="area2">경기도</button>
@@ -45,56 +43,51 @@
     <div id="anotherRecommendationArea"></div>
 
     <script>
-        const $gender = document.querySelector('#gender'); // id가 gender인 태그 선택하여 $gender에 저장
+        const $gender = document.querySelector('#gender');
         const $area = document.querySelector('#area');
         const $img = document.querySelector('img');
         $button = document.querySelector("#rec");
         $malebut = document.querySelector('#male')
         const apiKey = "exc8sJCH86r%2BCD8Xp4xzR7KVKJEXsS83J3GVgs3aWLgCMD2iDoBjpuUxV9nIfRTKQdHswD2tolt9eJkteZn%2FCg%3D%3D";
 
-        // 다른 추천 받는 버튼 변수
         const $anotherRecommendationButton = document.querySelector('#anotherRecommendation');
         const $anotherRecommendationArea = document.querySelector('#anotherRecommendationArea');
 
-        let gender; // 성별
-        let nx; // 지역 격자X
-        let ny; // 지역 격자Y
+        let gender;
+        let nx;
+        let ny;
 
-        let today = new Date(); //날짜및 시간 관련 변수들
-        let hour = today.getHours() - 1;// 시간
-        let year = today.getFullYear(); //년도
-        let Month = ('0' + (today.getMonth() + 1)).slice(-2);//월
-        let day = ('0' + today.getDate()).slice(-2);//날짜
+        let today = new Date();
+        let hour = today.getHours() - 1;
+        let year = today.getFullYear();
+        let Month = ('0' + (today.getMonth() + 1)).slice(-2);
+        let day = ('0' + today.getDate()).slice(-2);
         let realday = String(year) + String(Month) + String(day);
         let apidata;
 
-        let result = ""; // 멘트 관련 변수들
+        let result = "";
         let rainWarning = '오늘은 강수확률이 낮아 우산이 필요 없습니다.';
+        let onClickbuttonClick = false;
 
-        let AverageTem = [0, 0]; // 평균온도 관련된 변수 0:온도합, 1:평균온도
-        let AverageRa = ["", 0, 0]; // 평균 강수량에 관련된 변수 0:해당시간 강수량, 1:강수의합, 2: 평균 강수
+        let AverageTem = [0, 0];
+        let AverageRa = ["", 0, 0];
 
-
-
-        // 성별 버튼 클릭
         const onClickGender = (event) => {
-            $gender.textContent = event.target.textContent; // 화면에 성별 표시
-            gender = event.target.textContent; // 성별 변수에 성별 저장
+            $gender.textContent = event.target.textContent;
+            gender = event.target.textContent;
             console.log(gender);
             return gender;
         };
         document.querySelector('#male').addEventListener('click', onClickGender);
         document.querySelector('#female').addEventListener('click', onClickGender);
 
-
-
-        // 지역 버튼 클릭
         const onClickArea = (x, y) => () => {
-            $area.textContent = event.target.textContent; // 화면에 지역 표시
-            nx = x; // 지역 격자X 변수에 x좌표 저장
+            $area.textContent = event.target.textContent;
+            nx = x;
             ny = y;
             console.log(nx, ny);
         };
+
         document.querySelector('#area1').addEventListener('click', onClickArea(73, 134));
         document.querySelector('#area2').addEventListener('click', onClickArea(60, 120));
         document.querySelector('#area3').addEventListener('click', onClickArea(91, 77));
@@ -116,14 +109,15 @@
 
 
         const onClickbutton = async () => {
+            onClickbuttonClick = true;
             await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${apiKey}&numOfRows=30&pageNo=1&dataType=json&base_date=${realday}&base_time=${hour}30&nx=${nx}&ny=${ny}`)
                 .then(res => res.json())
                 .then(data => apidata = data.response.body.items)
                 .catch((err) => console.log(err));
 
-            AverageTemperature(); // 평균온도 구하는 함수
-            AverageRain(); // 평균 강수량 구하는 함수
-            recommendation(AverageTem[1], AverageRa[2]); // 패션 추천 함수
+            AverageTemperature();
+            AverageRain();
+            recommendation(AverageTem[1], AverageRa[2]);
             document.getElementById('resultArea').innerHTML = `
                 <p>${result}</p>
                 <p>${rainWarning}</p>
@@ -131,122 +125,114 @@
             console.log(result, rainWarning, `평균온도: ${AverageTem[1]}`, `평균강수량: ${AverageRa[2]}`);
         };
 
-
-        //패션 출력
         const recommendation = (temperature, rainfall) => {
-            if (gender == '남자') { // 성별이 남자인 경우
-                if (temperature <= 2) { // 기온이 2도 이하인 경우
+            if (gender == '남자') {
+                if (temperature <= 2) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/8875/detail_8875_1_500.jpg?202312101312";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/8875?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 2 && temperature <= 9) { // 기온 2도 ~ 9도
+                    result = "오늘 기온은 " + temperature + "도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/8875?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 2 && temperature <= 9) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/6746/detail_6746_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/6746?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 9 && temperature <= 16) { // 기온 9도 ~ 16도
+                    result = "오늘 기온은 " + temperature + "도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/6746?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 9 && temperature <= 16) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/6738/detail_6738_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/6738?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 16 && temperature <= 23) { // 기온 16도 ~ 23도
+                    result = "오늘 기온은 " + temperature + "도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/6738?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 16 && temperature <= 23) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/25360/detail_25360_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25360?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    result = "오늘 기온은 " + temperature + "도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25360?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
-                else { // 기온이 23도 초과인 경우
+                else {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/25302/detail_25302_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25302?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    result = "오늘 기온은 " + temperature + "도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25302?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
-            } else if (gender == '여자') { // 성별이 여자인 경우 , 이지훈: else에서 else if로 변경
-                if (temperature <= 2) { // 기온이 2도 이하인 경우
+            } else if (gender == '여자') {
+                if (temperature <= 2) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/28640/detail_28640_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/28640?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 2 && temperature <= 9) { // 기온 2도 ~ 9도
+                    result = "오늘 기온은 " + temperature + "도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/28640?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 2 && temperature <= 9) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/27387/detail_27387_2_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/27387?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 9 && temperature <= 16) { // 기온 9도 ~ 16도
+                    result = "오늘 기온은 " + temperature + "도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/27387?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 9 && temperature <= 16) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/2112/detail_2112_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/2112?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 16 && temperature <= 23) { // 기온 16도 ~ 23도
+                    result = "오늘 기온은 " + temperature + "도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/2112?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 16 && temperature <= 23) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/22868/detail_22868_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/22868?style_type=&tag_no=214&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    result = "오늘 기온은 " + temperature + "도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/22868?style_type=&tag_no=214&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
-                else { // 기온이 23도 초과인 경우
+                else {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/25338/detail_25338_1_500.jpg?202312101212";
-                    result = "오늘 기온은 "+ temperature +"도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25338?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    result = "오늘 기온은 " + temperature + "도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25338?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
             }
 
             if (rainfall >= 1) {
                 rainWarning = "오늘은 비가 오므로 우산이 필요합니다.";
             }
-            return result, rainWarning; //이지훈: 강수 reslut를 rainwaring으로 변경
+            return result, rainWarning;
         };
 
-
         $anotherRecommendationButton.addEventListener('click', () => {
-            const anotherRecommendation = generateAnotherRecommendation(gender, AverageTem[1], AverageRa[2]);
-            // if (anotherRecommendation) {
-            if (anotherRecommendation && anotherRecommendation.result) {
-                $anotherRecommendationArea.innerHTML = `
+            if (onClickbuttonClick) { 
+                const anotherRecommendation = generateAnotherRecommendation(gender, AverageTem[1], AverageRa[2]);
+                if (anotherRecommendation && anotherRecommendation.result) {
+                    $anotherRecommendationArea.innerHTML = `
                 <p>${anotherRecommendation.result}</p>
                 <p>${anotherRecommendation.rainWarning}</p>
             `;
-            }
-            else {
-
+                } else {
+                    
+                }
+            } else {
+                
             }
         });
 
-
-
         const generateAnotherRecommendation = (gender, temperature, rainfall) => {
-            let newResult = ""; // newResult 변수 생성
+            let newResult = "";
 
-            result = " "; // 기존 result 초기화
-            $img.src = " "; // 이미지 초기화
+            result = " ";
+            $img.src = " ";
 
-            if (gender == '남자') { // 성별이 남자인 경우
-                if (temperature <= 2) { // 기온이 2도 이하인 경우
+            if (gender == '남자') {
+                if (temperature <= 2) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/1059/detail_1059_1_500.jpg?202312101312";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/1059?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 2 && temperature <= 9) { // 기온 2도 ~ 9도
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/1059?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 2 && temperature <= 9) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/9372/detail_9372_1_500.jpg?202312101212";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/9372?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 9 && temperature <= 16) { // 기온 9도 ~ 16도
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/9372?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 9 && temperature <= 16) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/2407/detail_2407_1_500.jpg?202312101312";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/2407?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 16 && temperature <= 23) { // 기온 16도 ~ 23도
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/2407?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 16 && temperature <= 23) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/6365/detail_6365_1_500.jpg?202312101312";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/6365?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/6365?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=view_cnt&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
-                else { // 기온이 23도 초과인 경우
+                else {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/25267/detail_25267_1_500.jpg?202312101212";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25267?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25267?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
-            } else if (gender == '여자') { // 성별이 여자인 경우 , 이지훈: else에서 else if로 변경
-                if (temperature <= 2) { // 기온이 2도 이하인 경우
+            } else if (gender == '여자') {
+                if (temperature <= 2) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/28641/detail_28641_1_500.jpg?202312101212";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/28641?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 2 && temperature <= 9) { // 기온 2도 ~ 9도
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 한겨울 날씨이므로, 따뜻하게 코트나 패딩을 입는 것을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/28641?style_type=&tag_no=&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 2 && temperature <= 9) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/27384/detail_27384_1_500.jpg?202312101212";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/27384?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 9 && temperature <= 16) { // 기온 9도 ~ 16도
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 초겨울 날씨이므로, 가벼운 코트나 자켓을 이용한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/27384?style_type=&tag_no=216&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 9 && temperature <= 16) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/22968/detail_22968_1_500.jpg?202312101212";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/22968?style_type=&tag_no=214&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
-                } else if (temperature > 16 && temperature <= 23) { // 기온 16도 ~ 23도
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 낮에는 따뜻하지만 밤에는 약간 쌀쌀할 수 있으니 가벼운 외투를 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/22968?style_type=&tag_no=214&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                } else if (temperature > 16 && temperature <= 23) {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/22867/detail_22867_1_500.jpg?202312101212";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/22867?style_type=&tag_no=214&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 봄 가을 날씨이므로, 가볍고 편안하게 입을 수 있는 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/22867?style_type=&tag_no=214&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
-                else { // 기온이 23도 초과인 경우
+                else {
                     $img.src = "https://image.msscdn.net/images/codimap/detail/25339/detail_25339_1_500.jpg?202312101212";
-                    newResult = "오늘 기온은 "+ temperature +"도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25339?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
+                    newResult = "오늘 기온은 " + temperature + "도 입니다. 여름 날씨이므로, 반팔 또는 반바지를 활용한 시원한 옷차림을 추천합니다. " + " 링크 : <a href='https://www.musinsa.com/app/codimap/views/25339?style_type=&tag_no=215&brand=&display_cnt=60&list_kind=big&sort=date&page=1' target='_blank'>쇼핑몰 링크</a>";
                 }
-                result= newResult;
+                return newResult;
             }
-            return result;
-               
-            
 
-            // 링크를 하이퍼링크로 생성 및 출력
             document.getElementById('resultArea').innerHTML = ` 
                 <p>${newResult}</p>
-                <p>${rainWaring}</p>
             `;
         }
 
@@ -261,7 +247,7 @@
 
         const AverageRain = () => {
             AverageRa[0];
-            let slice = /[^0-9]/g; //문자열중 숫자만 남기는거
+            let slice = /[^0-9]/g;
 
             for (i = 12; i < 18; i++) {
                 AverageRa[0] = apidata.item[i].fcstValue;
@@ -271,7 +257,6 @@
             return AverageRa[2];
         }
 
-
         $button.addEventListener('click', onClickbutton);
 
         // 이지훈: 11/29일 추가내용 평균 온도 강수량 함수추가, 변수 설명, 코드 가독성을 위해 완성이된 함수들은 아래로 옮김 제대로 작동되는지 확인하려고 온도별 멘트 변경, 추후 지역자료는 업데이트 예정.
@@ -280,6 +265,7 @@
         // 경민서(12/8): 지역 입력 부분을 버튼으로 바꿈, 지역 버튼 클릭 이벤트 함수 추가
         // 김현준 : 옷차림 추천 및 다른 추천 컨텐츠 추가
         // 경민서(12/11): 성별 버튼 클릭과 지역 버튼 클릭 부분을 함수를 이용하여 중복 제거
+        // 김현준 : 제출 버튼 클릭 후 다른 추천 받기 클릭이 이어지게끔 하는 코드 추가
     </script>
 </body>
 
