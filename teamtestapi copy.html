@@ -124,6 +124,7 @@
             `;
             console.log(result, rainWarning, `평균온도: ${AverageTem[1]}`, `평균강수량: ${AverageRa[2]}`);
         };
+            $button.addEventListener('click', onClickbutton);
 
         const recommendation = (temperature, rainfall) => {
             if (gender == '남자') {
@@ -258,7 +259,7 @@
             return AverageRa[2];
         }
 
-        $button.addEventListener('click', onClickbutton);
+    
 
         // 이지훈: 11/29일 추가내용 평균 온도 강수량 함수추가, 변수 설명, 코드 가독성을 위해 완성이된 함수들은 아래로 옮김 제대로 작동되는지 확인하려고 온도별 멘트 변경, 추후 지역자료는 업데이트 예정.
         // 경민서(12/3): 성별 입력 부분을 버튼으로 바꿈, 성별 버튼 클릭 이벤트 함수 추가, 잘못된 성별이면 실행되는 코드 삭제
