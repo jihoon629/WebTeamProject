@@ -170,21 +170,18 @@
             return result, rainWarning;
         };
 
-        $anotherRecommendationButton.addEventListener('click', () => {
-            if (onClickbuttonClick) { 
+       $anotherRecommendationButton.addEventListener('click', () => {
+            if (onClickbuttonClick) {
                 const anotherRecommendation = generateAnotherRecommendation(gender, AverageTem[1], AverageRa[2]);
                 if (anotherRecommendation && anotherRecommendation.result) {
                     $anotherRecommendationArea.innerHTML = `
                 <p>${anotherRecommendation.result}</p>
                 <p>${anotherRecommendation.rainWarning}</p>
             `;
-                } else {
-                    
-                }
-            } else {
-                
+                } 
             }
         });
+
 
         const generateAnotherRecommendation = (gender, temperature, rainfall) => {
             let newResult = "";
